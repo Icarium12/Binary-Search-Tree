@@ -69,71 +69,145 @@ class Tree {
         }
     }
 
-    delete(value, root = this.root, previousRoot = null) {
-        if (this.root.value === value) {
-            this.root = null;
-            return;
-        }
+    delete(value, root = this.root) {
         if (root === null) {
-            throw new Error("Tree is empty");
+            return;
         }
         if (root.value === value) {
             if (root.left === null && root.right === null) {
-                if (previousRoot.left === root) {
-                    previousRoot.left = null;
-                    return;
-                }
-                else {
-                    previousRoot.right = null;
-                    return;
-                }
-                
+                root = null;
+                return
             }
             else if (root.left === null && root.right !== null) {
-                if (previousRoot.left === root) {
-                    previousRoot.left = root.right
-                    return
-                }
-                else {
-                    previousRoot.right = root.right;
-                    return;
-                }
+                root.value = root.right.value;
+                root.right = null;
                 return;
             }
             else if (root.left !== null && root.right === null) {
-                if (previousRoot.left === root) {
-                    previousRoot.left = root.left
-                    return;
-                }
-                else {
-                    previousRoot.right = root.left;
-                    return;
-                }
-                
+                root.value = root.left.value
+                root.left = null;
+                return;
             }
             else if (root.left !== null && root.right !== null) {
-                if (previousRoot === null) {
-                    root = null;
-                    return
+                if (root.right.left !== null) {
+                    leftNull(root.right.left, root, root.right); 
+                    // root.value = rightR.value
+                    // rightR = null;
+                    
                 }
-                if (previousRoot.left === root) {
-                    previousRoot.left = root.right.left;
+                else {
+                    root.value = root.right.value;
+                    root.right = null;
                     return;
                 }
-                else if(previousRoot.right === root) {
-                    previousRoot.right = root.right.left;
-                    return;
-                }   
+                function leftNull(root, headRoot, parentNode) {
+                    if (root.left === null){
+                        headRoot.value = root.value;
+                        parentNode.left = null;
+                        return root;
+                    }
+                    parentNode = root;
+                    return leftNull(root.left, headRoot, parentNode)
+                }
             }
         }
         else if (root.value > value) {
-            previousRoot = root
-            return this.delete(value, root.left, previousRoot);
+            return this.delete(value, root.left);
         }
         else if (root.value < value) {
-            previousRoot = root
-            return this.delete(value, root.right, previousRoot);
+            return this.delete(value, root.right);
         }
+
+
+
+
+        // if (this.root.value === value) {
+        //     this.root = root.left;
+        //     return;
+        // }
+        // if (root === null) {
+        //     throw new Error("Tree is empty");
+        // }
+        // if (root.value === value) {
+        //     if (root.left === null && root.right === null) {
+        //         if (previousRoot.left === root) {
+        //             previousRoot.left = null;
+        //             return;
+        //         }
+        //         else {
+        //             previousRoot.right = null;
+        //             return;
+        //         }
+                
+        //     }
+        //     else if (root.left === null && root.right !== null) {
+        //         if (previousRoot.left === root) {
+        //             previousRoot.left = root.right
+        //             return
+        //         }
+        //         else {
+        //             previousRoot.right = root.right;
+        //             return;
+        //         }
+        //     }
+        //     else if (root.left !== null && root.right === null) {
+        //         if (previousRoot.left === root) {
+        //             previousRoot.left = root.left
+        //             return;
+        //         }
+        //         else {
+        //             previousRoot.right = root.left;
+        //             return;
+        //         }
+                
+        //     }
+        //     else if (root.left !== null && root.right !== null) {
+        //         console.log(previousRoot);
+        //         console.log("**************")
+        //         console.log(root);
+        //         // if (previousRoot === null) {
+        //         //     root = null;
+        //         //     return
+        //         // }
+        //         if (previousRoot.left === root) {
+        //             if (root.right.left === null) {
+        //                 const left = root.left;
+        //                 root.right.left = left
+        //                 previousRoot.left = root.right;
+        //                 return;
+        //             }
+        //             else {
+        //                 previousRoot.value = root.left.value;
+        //                 const left = root.left;
+        //                 root.right.left.left = left
+        //                 previousRoot.left = root.right.left;
+        //                 return;
+        //             }
+        //         }
+        //         else if(previousRoot.right === root) {
+        //             if (root.right.left === null) {
+        //                 const left = root.left;
+        //                 root.right.left = left
+        //                 previousRoot.right = root.right
+        //                 return;
+        //             }
+        //             else {
+        //                 const left =root.left;
+        //                 root.right.left.left = left
+        //                 previousRoot.right = root.right.left;
+        //                 return;
+        //             }
+        //         }   
+        //     }
+        // }
+        // else if (root.value > value) {
+        //     previousRoot = root
+        //     return this.delete(value, root.left, previousRoot);
+        // }
+        // else if (root.value < value) {
+        //     previousRoot = root
+        //     return this.delete(value, root.right, previousRoot);
+        // }
     }
 
     find(value, root=this.root) {
@@ -156,7 +230,7 @@ class Tree {
             throw new Error("A callback function is required");
         }
         else {
-            queue = [];
+            const queue = [];
             queue.push(this.root);
             run(callback, queue);
         }
@@ -203,9 +277,9 @@ class Tree {
 
         function inOrder(callback, root) {
             if (root === null) return;
-            inOrder(root.left);
+            inOrder(callback, root.left);
             callback(root.value);
-            inOrder(root.right);
+            inOrder(callback, root.right);
         }
     }
 
@@ -220,8 +294,8 @@ class Tree {
 
         function postOrder(callback, root) {
             if (root === null) return;
-            postOrder(root.left);
-            postOrder(root.right);
+            postOrder(callback, root.left);
+            postOrder(callback, root.right);
             callback(root.value);
         }
     }
@@ -252,16 +326,20 @@ class Tree {
             return null;
         }
         else {
-            calcDepth(this.root, node);
+            return calcDepth(this.root, node);
         }
 
         function calcDepth(rootNode, node, level=0) {
             if (node === rootNode) {
                 return level;
             }
-            level++;
-            calcDepth(rootNode.left, node, level);
-            calcDepth(rootNode.right, node, level);
+            level++
+            if (rootNode.value > node.value) {
+                return calcDepth(rootNode.left, node, level);
+            }
+            else {
+                return calcDepth(rootNode.right, node, level);
+            }
         }
     }
 
@@ -271,12 +349,14 @@ class Tree {
                 throw new Error("Tree is empty");
             }
             else {
+                console.log(balance);
                 return balance;
             }
         }
         const heightDiff = calcHeight(root.left) - calcHeight(root.right);
+        console.log(heightDiff);
         if (heightDiff > 1 && (root.left.value < root.right.value)) {
-            balance = true;
+            balance = true; 
             this.isBalanced(root.left, balance);
             this.isBalanced(root.right, balance);
         }
@@ -299,8 +379,8 @@ class Tree {
     rebalance() {
         const array = [];
         
-        this.inOrderForEach(() => {
-            array.push();
+        this.inOrderForEach((item) => {
+            array.push(item);
         })
         this.buildTree(array);
     }
