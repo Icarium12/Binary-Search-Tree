@@ -5,9 +5,9 @@ const array = [20, 30, 36, 34, 32, 40, 50, 70, 60, 65, 80, 75, 85];
 
 const tree = new Tree(array);
 const root = tree.buildTree();
-tree.delete(34);
 
-// const find = tree.find(1);
+
+
 // console.log(typeof find);
 
 
@@ -39,9 +39,11 @@ tree.insert(230);
 prettyPrint(tree.root);
 console.log(tree.isBalanced());
 tree.rebalance();
-console.log(tree.isBalanced());
+console.log(tree.isBalanced());;
 prettyPrint(tree.root);
 
+const find = tree.find(40);
+prettyPrint(find);
 
 // tree.levelOrderForEach((item) => {
 //     console.log(item);
