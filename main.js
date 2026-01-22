@@ -26,6 +26,23 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
 };
 
 prettyPrint(tree.root);
+
+tree.insert(150);
+tree.insert(135);
+tree.insert(190);
+tree.insert(111);
+tree.insert(145);
+tree.insert(108);
+tree.insert(175);
+tree.insert(200);
+tree.insert(230);
+prettyPrint(tree.root);
+console.log(tree.isBalanced());
+tree.rebalance();
+console.log(tree.isBalanced());
+prettyPrint(tree.root);
+
+
 // tree.levelOrderForEach((item) => {
 //     console.log(item);
 // })
@@ -41,6 +58,3 @@ prettyPrint(tree.root);
 // tree.postOrderForEach((item) => {
 //     console.log(item);
 // })
-
-console.log(tree.isBalanced());
-// prettyPrint(find);

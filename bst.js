@@ -18,8 +18,7 @@ class Tree {
         }
         else {
             const uniqueArray = [...new Set(array)];
-            uniqueArray.sort((a, b) => a - b);
-            console.log(uniqueArray);
+            uniqueArray.sort((a, b) => a - b);;
             const start = 0;
             const end = uniqueArray.length - 1;
 
@@ -90,10 +89,7 @@ class Tree {
             }
             else if (root.left !== null && root.right !== null) {
                 if (root.right.left !== null) {
-                    leftNull(root.right.left, root, root.right); 
-                    // root.value = rightR.value
-                    // rightR = null;
-                    
+                    leftNull(root.right.left, root, root.right);      
                 }
                 else {
                     root.value = root.right.value;
@@ -253,26 +249,30 @@ class Tree {
         }
     }
 
-    isBalanced(root = this.root, balance=null) {
+    isBalanced(root = this.root, balance) {
         if (root === null) {
-            if (balance === null) {
-                throw new Error("Tree is empty");
-            }
-            else {
-                console.log(balance);
-                return balance;
-            }
+            return true;
         }
-        const heightDiff = calcHeight(root.left) - calcHeight(root.right);
-        console.log(heightDiff);
-        if (heightDiff > 1 && (root.left.value < root.right.value)) {
+        if (balance === false) {
+            return false;
+        }
+        const heightDiff = calcHeight(root.right) - calcHeight(root.left);
+        if (heightDiff <= 1 ) {
             balance = true; 
-            this.isBalanced(root.left, balance);
-            this.isBalanced(root.right, balance);
         }
         else {
             balance = false;
         }
+        const leftBalance = this.isBalanced(root.left, balance);
+        const righBalance = this.isBalanced(root.right, balance);
+
+        if (balance === true && leftBalance === true && righBalance === true) {
+            return true;
+        }
+        else {
+            return false;
+        }
+        
 
 
         function calcHeight(root) {
